@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GTA VI is coming</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --night: #08040f;
+    --plum: #2a0a3d;
+    --pink: #ff2d95;
+    --orange: #ff8a3d;
+    --text: #ffffff;
+    --glow: #ff2d95;           /* change this to recolor the image glow */
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { height: 100%; }
+  body {
+    background:
+      radial-gradient(60% 70% at 40% 45%, rgba(255,45,149,.38), transparent 70%),
+      radial-gradient(45% 55% at 75% 20%, rgba(255,138,61,.28), transparent 70%),
+      linear-gradient(180deg, var(--plum) 0%, var(--night) 75%);
+    color: var(--text);
+    font-family: "Jost", "Futura", "Century Gothic", system-ui, sans-serif;
+    overflow: hidden;
+  }
+  /* soft vignette so the bottom stays dark like the reference */
+  body::after {
+    content: ""; position: fixed; inset: 0; pointer-events: none;
+    background: linear-gradient(180deg, transparent 45%, rgba(0,0,0,.85) 100%);
+  }
+
+  /* ---------- IMAGE PLACEHOLDER (glowing edges) ---------- */
+  .figure {
+    position: absolute; left: 50%; top: 4vh;
+    transform: translateX(-62%);
+    height: 74vh; aspect-ratio: 3 / 4; max-width: 90vw;
+    display: grid; place-items: center;
+    filter: drop-shadow(0 0 4px var(--glow)) drop-shadow(0 0 22px var(--glow)) drop-shadow(0 0 60px var(--glow));
+    animation: pulse 5s ease-in-out infinite;
+  }
+  .figure img { width: 100%; height: 100%; object-fit: contain; display: none; }
+  .figure.has-image img { display: block; }
+  .figure .placeholder {
+    width: 100%; height: 100%;
+    border: 2px dashed rgba(255,255,255,.75);
+    border-radius: 6px;
+    display: grid; place-items: center; text-align: center;
+    padding: 1.5rem; color: rgba(255,255,255,.85); font-size: 1rem; line-height: 1.5;
+  }
+  .figure.has-image .placeholder { display: none; }
+  @keyframes pulse {
+    0%, 100% { filter: drop-shadow(0 0 3px var(--glow)) drop-shadow(0 0 18px var(--glow)) drop-shadow(0 0 48px var(--glow)); }
+    50%      { filter: drop-shadow(0 0 6px var(--glow)) drop-shadow(0 0 30px var(--glow)) drop-shadow(0 0 80px var(--glow)); }
+  }
+
+  /* ---------- HEADLINE + COUNTDOWN ---------- */
+  .countdown {
+    position: absolute; left: 0; right: 0; bottom: 9vh;
+    z-index: 2; text-align: center; padding: 0 1rem;
+  }
+  h1 {
+    font-weight: 600; font-size: clamp(1.1rem, 2.6vw, 2rem);
+    letter-spacing: .16em; text-transform: uppercase; margin-bottom: .6rem;
+    text-shadow: 0 2px 18px rgba(0,0,0,.8);
+  }
+  .clock { display: inline-flex; align-items: flex-start; gap: clamp(.4rem, 1.6vw, 1.4rem); }
+  .unit { display: flex; flex-direction: column; align-items: center; }
+  .digits {
+    font-weight: 500; font-size: clamp(2.6rem, 8vw, 6rem); line-height: 1;
+    letter-spacing: .06em; font-variant-numeric: tabular-nums;
+    text-shadow: 0 2px 24px rgba(0,0,0,.8);
+  }
+  .sep { font-weight: 500; font-size: clamp(2.6rem, 8vw, 6rem); line-height: 1; }
+  .label {
+    margin-top: .7rem; font-size: clamp(.6rem, 1.1vw, .85rem);
+    letter-spacing: .14em; text-transform: uppercase; font-weight: 500;
+  }
+
+  /* ---------- SOUND BUTTON ---------- */
+  #sound {
+    position: fixed; top: 1rem; right: 1rem; z-index: 3;
+    background: rgba(0,0,0,.45); color: #fff; font: inherit; font-size: .9rem;
+    border: 1px solid rgba(255,255,255,.5); border-radius: 999px; padding: .5rem 1rem; cursor: pointer;
+  }
+  #sound:hover { background: rgba(255,255,255,.15); }
+  #sound:focus-visible, .figure:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+
+  @media (max-width: 700px) {
+    .figure { transform: translateX(-50%); height: 52vh; top: 6vh; }
+    .countdown { bottom: 6vh; }
+  }
+  @media (prefers-reduced-motion: reduce) { .figure { animation: none; } }
+</style>
+</head>
+<body>
+
+<button id="sound" type="button">Enable sound</button>
+
+<!-- ===== IMAGE PLACEHOLDER =====
+     Set HERO_IMAGE in the script below. A PNG with a transparent background
+     gives the best edge glow (the glow follows the shape of the image). -->
+<div class="figure" id="figure">
+  <img id="heroImg" alt="">
+  <div class="placeholder">Grand-Theft-Auto-VI-Logo-PNG-Clipart-3442569013.png<br>(set HERO_IMAGE in the script)</div>
+</div>
+
+<main class="countdown">
+  <h1 id="headline">GTA VI is coming</h1>
+  <div class="clock" role="timer" aria-live="off">
+    <div class="unit"><div class="digits" id="mo">00</div><div class="label" id="moL">Months</div></div>
+    <div class="sep">:</div>
+    <div class="unit"><div class="digits" id="d">00</div><div class="label" id="dL">Days</div></div>
+    <div class="sep">:</div>
+    <div class="unit"><div class="digits" id="h">00</div><div class="label" id="hL">Hours</div></div>
+    <div class="sep">:</div>
+    <div class="unit"><div class="digits" id="mi">00</div><div class="label" id="miL">Minutes</div></div>
+    <div class="sep">:</div>
+    <div class="unit"><div class="digits" id="s">00</div><div class="label" id="sL">Seconds</div></div>
+  </div>
+</main>
+
+<script>
+  /* ================= EDIT THESE ================= */
+  const HERO_IMAGE = "";   // e.g. "images/character.png"  (leave "" to show the placeholder)
+  const SOUND_FILE = "";   // e.g. "sounds/vice-city.mp3"  (plays when the clock hits zero)
+  const TICK_FILE  = "";   // e.g. "sounds/tick.mp3"       (plays every second while counting down)
+
+  // GTA VI release: Thursday, November 19, 2026, midnight in the viewer's local time.
+  const RELEASE = new Date(2026, 10, 19, 0, 0, 0);
+
+  // Preview the zero moment: open the page with ?test to count down from 10 seconds.
+  const TEST = new URLSearchParams(location.search).has("test");
+  /* ============================================== */
+
+  const target = TEST ? new Date(Date.now() + 10000) : RELEASE;
+  const $ = id => document.getElementById(id);
+  const pad = n => String(n).padStart(2, "0");
+
+  // image placeholder
+  if (HERO_IMAGE) {
+    $("heroImg").src = HERO_IMAGE;
+    $("figure").classList.add("has-image");
+  }
+
+  // sound (browsers only allow audio after a click, so the button turns it on)
+  const audio = SOUND_FILE ? new Audio(SOUND_FILE) : null;
+  const tickAudio = TICK_FILE ? new Audio(TICK_FILE) : null;
+  let soundOn = false;
+
+  function prime(a) {
+    if (!a) return;
+    a.play().then(() => { a.pause(); a.currentTime = 0; }).catch(() => {});
+  }
+
+  $("sound").addEventListener("click", () => {
+    soundOn = !soundOn;
+    $("sound").textContent = soundOn ? "Sound on" : "Enable sound";
+    if (soundOn) { prime(audio); prime(tickAudio); }
+  });
+
+  function playTick() {
+    if (!soundOn || !tickAudio) return;
+    tickAudio.currentTime = 0;
+    tickAudio.play().catch(() => {});
+  }
+
+  // add whole months to a date, clamping the day (Jan 31 + 1 month = Feb 28)
+  function addMonths(date, n) {
+    const d = new Date(date);
+    const day = d.getDate();
+    d.setDate(1);
+    d.setMonth(d.getMonth() + n);
+    const last = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+    d.setDate(Math.min(day, last));
+    return d;
+  }
+
+  let finished = false;
+  let lastSecond = null;
+
+  function tick() {
+    const now = new Date();
+    if (now >= target) return finish();
+
+    let months = (target.getFullYear() - now.getFullYear()) * 12 + (target.getMonth() - now.getMonth());
+    if (addMonths(now, months) > target) months--;
+    months = Math.max(0, months);
+
+    let rest = target - addMonths(now, months);
+    const days = Math.floor(rest / 864e5);  rest -= days * 864e5;
+    const hours = Math.floor(rest / 36e5);  rest -= hours * 36e5;
+    const mins = Math.floor(rest / 6e4);    rest -= mins * 6e4;
+    const secs = Math.floor(rest / 1e3);
+
+    render(months, days, hours, mins, secs);
+    if (lastSecond !== null && secs !== lastSecond) playTick();
+    lastSecond = secs;
+  }
+
+  function render(mo, d, h, mi, s) {
+    $("mo").textContent = pad(mo); $("d").textContent = pad(d); $("h").textContent = pad(h);
+    $("mi").textContent = pad(mi); $("s").textContent = pad(s);
+    $("moL").textContent = mo === 1 ? "Month" : "Months";
+    $("dL").textContent = d === 1 ? "Day" : "Days";
+    $("hL").textContent = h === 1 ? "Hour" : "Hours";
+    $("miL").textContent = mi === 1 ? "Minute" : "Minutes";
+    $("sL").textContent = s === 1 ? "Second" : "Seconds";
+  }
+
+  function finish() {
+    render(0, 0, 0, 0, 0);
+    if (finished) return;
+    finished = true;
+    clearInterval(timer);
+    $("headline").textContent = "GTA VI is here";
+    if (audio && soundOn) audio.play().catch(() => {});   // plays only if sound was enabled with the button
+  }
+
+  tick();
+  const timer = setInterval(tick, 250);
+</script>
+</body>
+</html>
