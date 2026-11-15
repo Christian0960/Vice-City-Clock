@@ -109,7 +109,7 @@
 </div>
 
 <main class="countdown">
-  <h1 id="headline">Vice City is coming</h1>
+  <h1 id="headline">Arriving at Vice City in</h1>
   <div class="clock" role="timer" aria-live="off">
     <div class="unit"><div class="digits" id="mo">00</div><div class="label" id="moL">Months</div></div>
     <div class="sep">:</div>
@@ -216,7 +216,7 @@ const TICK_FILE  = "your-tick-sound.mp3";   // e.g. "sounds/tick.mp3"       (pla
     if (finished) return;
     finished = true;
     clearInterval(timer);
-    $("headline").textContent = "Vice City is here.";
+    $("headline").textContent = "Now Arriving in Vice City";
     if (audio && soundOn) audio.play().catch(() => {});   // plays only if sound was enabled with the button
   }
 
