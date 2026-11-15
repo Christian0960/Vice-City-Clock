@@ -109,7 +109,7 @@
 </div>
 
 <main class="countdown">
-  <h1 id="headline">GTA VI is coming</h1>
+  <h1 id="headline">Vice City is coming</h1>
   <div class="clock" role="timer" aria-live="off">
     <div class="unit"><div class="digits" id="mo">00</div><div class="label" id="moL">Months</div></div>
     <div class="sep">:</div>
@@ -130,7 +130,7 @@ const SOUND_FILE = "your-zero-sound.mp3";
 const TICK_FILE  = "your-tick-sound.mp3";   // e.g. "sounds/tick.mp3"       (plays every second while counting down)
 
   // GTA VI release: Thursday, November 19, 2026, midnight in the viewer's local time.
-  const RELEASE = new Date(2026, 10, 19, 0, 0, 0);
+  const RELEASE = new Date(2026, 10, 18, 21, 0, 0);
 
   // Preview the zero moment: open the page with ?test to count down from 10 seconds.
   const TEST = new URLSearchParams(location.search).has("test");
@@ -216,7 +216,7 @@ const TICK_FILE  = "your-tick-sound.mp3";   // e.g. "sounds/tick.mp3"       (pla
     if (finished) return;
     finished = true;
     clearInterval(timer);
-    $("headline").textContent = "GTA VI is here";
+    $("headline").textContent = "Vice City is here.";
     if (audio && soundOn) audio.play().catch(() => {});   // plays only if sound was enabled with the button
   }
 
